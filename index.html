@@ -97,7 +97,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .slides{position:relative;aspect-ratio:16/10;border-radius:9px;overflow:hidden;background:#f2f2ef}
 .slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;opacity:0;transform:scale(1.015);transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
 .slide.on{opacity:1;transform:none;z-index:1}
-@media (max-width:700px){.show{padding:7% 5% 11%;border-radius:12px}.frame{padding:4px;border-radius:10px}.slides{border-radius:7px}}
+@media (max-width:700px){.show{background-image:url("assets/hero/meadow-800.webp");padding:7% 5% 11%;border-radius:12px}.frame{padding:4px;border-radius:10px}.slides{border-radius:7px}}
 @media (prefers-reduced-motion:reduce){.slide{transition:none;transform:none}}
 
 /* section label */
@@ -249,16 +249,16 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
     <div class="show" id="show">
       <div class="frame">
         <div class="slides" aria-live="off">
-          <img class="slide on" src="assets/hero/gather.webp" alt="Gather, an events calendar for teams" data-product="gather" width="2400" height="1500" fetchpriority="high">
-          <img class="slide" src="assets/hero/gather-dash.webp" alt="Gather dashboard with upcoming events and team load" data-product="gather" width="2400" height="1500">
-          <img class="slide" src="assets/hero/nudge.webp" alt="Nudge, an AI inbox that sorts what needs a reply" data-product="nudge" width="2400" height="1500">
-          <img class="slide" src="assets/hero/nudge-composer.webp" alt="Nudge AI composer drafting a reply" data-product="nudge" width="2400" height="1500">
-          <img class="slide" src="assets/hero/nudge-assistant.webp" alt="Nudge AI assistant answering questions about email" data-product="nudge" width="2400" height="1500">
-          <img class="slide" src="assets/hero/relay.webp" alt="Relay, an AI CRM sales dashboard" data-product="relay" width="2400" height="1500">
-          <img class="slide" src="assets/hero/relay-pipeline.webp" alt="Relay deal pipeline board" data-product="relay" width="2400" height="1500">
-          <img class="slide" src="assets/hero/relay-analytics.webp" alt="Relay sales analytics" data-product="relay" width="2400" height="1500">
-          <img class="slide" src="assets/hero/relay-contacts.webp" alt="Relay contacts with AI lead summaries" data-product="relay" width="2400" height="1500">
-          <img class="slide" src="assets/hero/subs.webp" alt="Subscriptions table for a billing product" data-product="subs" width="2400" height="1500">
+          <img class="slide on" src="assets/hero/gather-1100.webp" srcset="assets/hero/gather-1100.webp 1100w, assets/hero/gather-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Gather, an events calendar for teams" data-product="gather" width="2400" height="1500" fetchpriority="high">
+          <img class="slide" data-src="assets/hero/gather-dash-1100.webp" data-srcset="assets/hero/gather-dash-1100.webp 1100w, assets/hero/gather-dash-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Gather dashboard with upcoming events and team load" data-product="gather" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/nudge-1100.webp" data-srcset="assets/hero/nudge-1100.webp 1100w, assets/hero/nudge-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Nudge, an AI inbox that sorts what needs a reply" data-product="nudge" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/nudge-composer-1100.webp" data-srcset="assets/hero/nudge-composer-1100.webp 1100w, assets/hero/nudge-composer-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Nudge AI composer drafting a reply" data-product="nudge" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/nudge-assistant-1100.webp" data-srcset="assets/hero/nudge-assistant-1100.webp 1100w, assets/hero/nudge-assistant-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Nudge AI assistant answering questions about email" data-product="nudge" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/relay-1100.webp" data-srcset="assets/hero/relay-1100.webp 1100w, assets/hero/relay-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Relay, an AI CRM sales dashboard" data-product="relay" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/relay-pipeline-1100.webp" data-srcset="assets/hero/relay-pipeline-1100.webp 1100w, assets/hero/relay-pipeline-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Relay deal pipeline board" data-product="relay" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/relay-analytics-1100.webp" data-srcset="assets/hero/relay-analytics-1100.webp 1100w, assets/hero/relay-analytics-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Relay sales analytics" data-product="relay" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/relay-contacts-1100.webp" data-srcset="assets/hero/relay-contacts-1100.webp 1100w, assets/hero/relay-contacts-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Relay contacts with AI lead summaries" data-product="relay" width="2400" height="1500">
+          <img class="slide" data-src="assets/hero/subs-1100.webp" data-srcset="assets/hero/subs-1100.webp 1100w, assets/hero/subs-2000.webp 2000w" sizes="(max-width:700px) 90vw, (max-width:1440px) 72vw, 1040px" alt="Subscriptions table for a billing product" data-product="subs" width="2400" height="1500">
         </div>
       </div>
     </div>
@@ -293,10 +293,10 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
             <div class="tab-body"><div><p>A data table component for dense views, with filters, sorting, statuses and bulk selection.</p></div></div></li>
         </ul>
       <div class="pv" id="pv">
-        <div class="pane on" id="pane-gather"><img src="assets/work/bg/tulips.webp" alt="" loading="lazy"><div class="proto"><div class="proto-clip" style="--ar:3/2"><video muted playsinline preload="none" poster="assets/work/video/gather-poster.jpg" data-src="assets/work/video/gather.mp4" aria-label="Gather walkthrough: opening an event and replying to the invite"></video></div></div></div>
-        <div class="pane" id="pane-nudge"><img src="assets/work/bg/heart.webp" alt="" loading="lazy"><div class="proto"><div class="proto-clip" style="--ar:16/9"><video muted playsinline preload="none" poster="assets/work/video/nudge-poster.jpg" data-src="assets/work/video/nudge.mp4" aria-label="Nudge walkthrough: opening an email and drafting a reply"></video></div></div></div>
-        <div class="pane" id="pane-relay"><img src="assets/work/bg/mountain.webp" alt="" loading="lazy"><div class="proto"><div class="proto-clip" style="--ar:16/9"><video muted playsinline preload="none" poster="assets/work/video/relay-poster.jpg" data-src="assets/work/video/relay.mp4" aria-label="Relay walkthrough: generating a follow-up email with Relay AI"></video></div></div></div>
-        <div class="pane" id="pane-subs"><img src="assets/work/bg/leaf.webp" alt="" loading="lazy"><div class="proto"><div class="proto-clip" style="--ar:16/10"><iframe title="Design system components prototype" data-src="assets/work/subs/Main.dc.html" loading="lazy" tabindex="-1"></iframe></div></div></div>
+        <div class="pane on" id="pane-gather"><img src="assets/work/bg/tulips-800.webp" srcset="assets/work/bg/tulips-800.webp 800w, assets/work/bg/tulips.webp 1500w" sizes="(max-width:1000px) 100vw, 60vw" alt="" loading="lazy" decoding="async"><div class="proto"><div class="proto-clip" style="--ar:3/2"><video muted playsinline preload="none" data-poster="assets/work/video/gather-poster.webp" data-src="assets/work/video/gather.mp4" aria-label="Gather walkthrough: opening an event and replying to the invite"></video></div></div></div>
+        <div class="pane" id="pane-nudge"><img src="assets/work/bg/heart-800.webp" srcset="assets/work/bg/heart-800.webp 800w, assets/work/bg/heart.webp 1500w" sizes="(max-width:1000px) 100vw, 60vw" alt="" loading="lazy" decoding="async"><div class="proto"><div class="proto-clip" style="--ar:16/9"><video muted playsinline preload="none" data-poster="assets/work/video/nudge-poster.webp" data-src="assets/work/video/nudge.mp4" aria-label="Nudge walkthrough: opening an email and drafting a reply"></video></div></div></div>
+        <div class="pane" id="pane-relay"><img src="assets/work/bg/mountain-800.webp" srcset="assets/work/bg/mountain-800.webp 800w, assets/work/bg/mountain.webp 1500w" sizes="(max-width:1000px) 100vw, 60vw" alt="" loading="lazy" decoding="async"><div class="proto"><div class="proto-clip" style="--ar:16/9"><video muted playsinline preload="none" data-poster="assets/work/video/relay-poster.webp" data-src="assets/work/video/relay.mp4" aria-label="Relay walkthrough: generating a follow-up email with Relay AI"></video></div></div></div>
+        <div class="pane" id="pane-subs"><img src="assets/work/bg/leaf-800.webp" srcset="assets/work/bg/leaf-800.webp 800w, assets/work/bg/leaf.webp 1500w" sizes="(max-width:1000px) 100vw, 60vw" alt="" loading="lazy" decoding="async"><div class="proto"><div class="proto-clip" style="--ar:16/10"><iframe title="Design system components prototype" data-src="assets/work/subs/Main.dc.html" loading="lazy" tabindex="-1"></iframe></div></div></div>
       </div>
     </div>
   </section>
@@ -353,17 +353,22 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
   }
   window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 
-  /* hero showcase: change product shot every 2s, shuffled on each load */
+  /* hero showcase: first screen loads with the page; the rest download one by one afterwards, shuffled, and only show once ready */
   (function(){
     var show=document.getElementById('show');if(!show)return;
-    var box=show.querySelector('.slides'),slides=[].slice.call(box.querySelectorAll('.slide')),i=0,t;
+    var box=show.querySelector('.slides'),all=[].slice.call(box.querySelectorAll('.slide')),first=all[0],rest=all.slice(1),i=0,t;
     function shuffle(a){for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),x=a[k];a[k]=a[j];a[j]=x}return a}
     function clash(a){for(var k=0;k<a.length;k++){if(a[k].dataset.product===a[(k+1)%a.length].dataset.product)return true}return false}
-    var tries=0;do{shuffle(slides)}while(clash(slides)&&++tries<200);
-    slides.forEach(function(sl){sl.classList.remove('on');box.appendChild(sl)});
-    function go(n){slides[i].classList.remove('on');i=n;slides[i].classList.add('on')}
-    function start(){clearInterval(t);t=setInterval(function(){go((i+1)%slides.length)},2000)}
-    go(0);start();
+    var tries=0;do{shuffle(rest)}while(clash([first].concat(rest))&&++tries<200);
+    var slides=[first].concat(rest);slides.forEach(function(sl){box.appendChild(sl)});
+    function ready(sl){return sl.getAttribute('src')&&sl.complete&&sl.naturalWidth>0}
+    function fetchNext(k){if(k>=rest.length)return;var sl=rest[k];sl.onload=sl.onerror=function(){fetchNext(k+1)};sl.srcset=sl.dataset.srcset;sl.src=sl.dataset.src}
+    if(document.readyState==='complete')fetchNext(0);else window.addEventListener('load',function(){fetchNext(0)});
+    function go(){
+      for(var step=1;step<slides.length;step++){var n=(i+step)%slides.length;if(ready(slides[n])){slides[i].classList.remove('on');i=n;slides[i].classList.add('on');return}}
+    }
+    function start(){clearInterval(t);t=setInterval(go,2000)}
+    start();
     document.addEventListener('visibilitychange',function(){document.hidden?clearInterval(t):start()});
   })();
 
@@ -373,7 +378,7 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
     var panes=tabs.map(function(t){return document.getElementById(t.querySelector('button').getAttribute('aria-controls'))});
     var PROTO=9000,cur=0,timer=null,left=PROTO,startAt=0,held=false,seen=false;
     function media(n){return panes[n].querySelector('video,iframe')}
-    function load(n){var m=media(n);if(m&&!m.getAttribute('src')){m.src=m.dataset.src;if(m.tagName==='VIDEO')m.preload='auto'}}
+    function load(n,soon){var m=media(n);if(!m)return;if(m.tagName==='VIDEO'){if(!m.poster&&m.dataset.poster)m.poster=m.dataset.poster;m.preload=soon?'metadata':'auto'}if(!m.getAttribute('src'))m.src=m.dataset.src}
     function fit(){panes.forEach(function(p){var c=p.querySelector('.proto-clip');if(c&&c.querySelector('iframe'))c.style.setProperty('--s',(c.clientWidth/1440).toFixed(4))})}
     function bar(ms){var t=tabs[cur];t.style.setProperty('--dur',ms+'ms');t.classList.remove('on');void t.offsetWidth;t.classList.add('on')}
     function next(){show((cur+1)%tabs.length)}
@@ -381,7 +386,7 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
       clearTimeout(timer);
       var old=media(cur);if(old&&old.tagName==='VIDEO')old.pause();
       tabs[cur].classList.remove('on','held');tabs[cur].querySelector('button').setAttribute('aria-expanded','false');panes[cur].classList.remove('on');
-      cur=n;load(n);load((n+1)%tabs.length);
+      cur=n;load(n);load((n+1)%tabs.length,true);
       tabs[n].querySelector('button').setAttribute('aria-expanded','true');panes[n].classList.add('on');held=false;
       var m=media(n);
       if(m.tagName==='VIDEO'){
