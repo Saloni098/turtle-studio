@@ -161,8 +161,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* play: pinned strip; vertical scrolling moves the cards sideways, then the page carries on */
 .play{position:relative;width:100vw;margin-left:calc(50% - 50vw)}
 .play-pin{position:sticky;top:80px;height:calc(100vh - 80px);display:flex;flex-direction:column;justify-content:center;gap:28px;overflow:hidden}
-.play-head{width:100%;max-width:1440px;margin:0 auto;padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px));display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.play-head p{font-size:16px;color:var(--muted)}
 .play-track{display:flex;gap:20px;width:max-content;padding-left:var(--play-pad,72px);padding-right:var(--play-pad,72px);will-change:transform}
 .play-card{flex:none;height:min(58vh,560px);margin:0;border-radius:14px;overflow:hidden;background:var(--block)}
 .play-card img{display:block;height:100%;width:auto;max-width:none}
@@ -337,19 +335,8 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
     <a class="btn dark" href="https://cal.com/salonidwivedi" target="_blank" rel="noopener">Enquire now →</a>
   </section>
 
-  <section class="roadmap">
-    <h2>Your next design hire<br>doesn’t have to be a hire.</h2>
-    <p>Get the design thinking and execution your product needs, without adding another full-time role to your team.<br>We work alongside you to move ideas forward, solve problems and build better products.</p>
-    <span class="brk" aria-hidden="true"></span>
-    <a class="btn lime" href="https://cal.com/salonidwivedi" target="_blank" rel="noopener">Book a free consultation →</a>
-  </section>
-
-  <section class="play" id="play" aria-label="Play">
+  <section class="play" id="play" aria-label="Interaction design explorations">
     <div class="play-pin">
-      <div class="play-head">
-        <h2 class="sec-label">Play</h2>
-        <p>Snippets of my experiments with designing interactions.</p>
-      </div>
       <div class="play-track" id="play-track">
         <figure class="play-card"><img src="assets/play/play-01.webp" srcset="assets/play/play-01.webp 1x, assets/play/play-01-2x.webp 2x" width="871" height="560" alt="Interaction design exploration 1" loading="lazy" decoding="async"></figure>
         <figure class="play-card"><img src="assets/play/play-02.webp" srcset="assets/play/play-02.webp 1x, assets/play/play-02-2x.webp 2x" width="728" height="560" alt="Interaction design exploration 2" loading="lazy" decoding="async"></figure>
@@ -366,6 +353,14 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
       </div>
     </div>
   </section>
+
+  <section class="roadmap">
+    <h2>Your next design hire<br>doesn’t have to be a hire.</h2>
+    <p>Get the design thinking and execution your product needs, without adding another full-time role to your team.<br>We work alongside you to move ideas forward, solve problems and build better products.</p>
+    <span class="brk" aria-hidden="true"></span>
+    <a class="btn lime" href="https://cal.com/salonidwivedi" target="_blank" rel="noopener">Book a free consultation →</a>
+  </section>
+
 
 </main>
 
@@ -453,7 +448,7 @@ footer{margin-top:var(--section-gap);position:relative;overflow:hidden;height:cl
     var sec=document.getElementById('play'),track=document.getElementById('play-track');if(!sec)return;
     var pin=sec.querySelector('.play-pin'),dist=0,raf=0;
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-    function pad(){var head=sec.querySelector('.play-head');var cs=getComputedStyle(head);var left=head.getBoundingClientRect().left+parseFloat(cs.paddingLeft);track.style.setProperty('--play-pad',Math.max(16,left)+'px')}
+    function pad(){var page=document.querySelector('.page');var left=page.getBoundingClientRect().left+parseFloat(getComputedStyle(page).paddingLeft);track.style.setProperty('--play-pad',Math.max(16,left)+'px')}
     function measure(){pad();dist=Math.max(0,track.scrollWidth-pin.clientWidth);sec.style.height=(pin.offsetHeight+dist)+'px';update()}
     function update(){raf=0;var top=sec.getBoundingClientRect().top-parseFloat(getComputedStyle(pin).top);var p=Math.min(1,Math.max(0,-top/(dist||1)));track.style.transform='translate3d('+(-p*dist).toFixed(1)+'px,0,0)'}
     window.addEventListener('scroll',function(){if(!raf)raf=requestAnimationFrame(update)},{passive:true});
