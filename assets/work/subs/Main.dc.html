@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Subscriptions table prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Nunito Sans',system-ui,sans-serif;color:#101828;background:#E9ECF1}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:#2563EB}a:hover{color:#1D4ED8}
+:focus-visible{outline:2px solid #2563EB;outline-offset:2px}
+.wrap{min-height:100vh;padding:24px}
+.panel{max-width:1440px;margin:0 auto;background:#fff;border-radius:24px;padding:44px 52px 40px;box-shadow:0 1px 2px rgba(16,24,40,.06),0 0 0 1px rgba(16,24,40,.05)}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.title{display:flex;align-items:center;gap:14px}
+.logo{width:34px;height:34px;border-radius:8px;background:#101828;color:#fff;display:flex;align-items:center;justify-content:center}
+.title h1{margin:0;font-size:28px;font-weight:700;letter-spacing:-.01em}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border:0;border-radius:10px;background:#2563EB;color:#fff;font-size:16px;font-weight:500}
+.btn-primary:hover{background:#1D4ED8}
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid #D0D5DD;border-radius:8px;background:#fff;color:#344054;font-size:14.5px;font-weight:600}
+.btn:hover{background:#F9FAFB}
+.btn-danger{color:#B42318;border-color:#FECDCA}
+.btn-danger:hover{background:#FEF3F2}
+.tabs{display:flex;align-items:flex-end;gap:28px;margin-top:30px;border-bottom:2px solid #EAECF0;flex-wrap:wrap}
+.tab-wrap{display:flex;align-items:center;gap:2px}
+.tab{position:relative;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 2px;border:0;background:none;color:#667085;font-size:16px;font-weight:500}
+.tab:hover{color:#344054}
+.tab.on{color:#101828;font-weight:700}
+.tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:3px;border-radius:2px;background:#101828}
+.count{display:inline-flex;align-items:center;height:22px;padding:0 7px;border:1px solid #D0D5DD;border-radius:7px;font-size:13px;font-weight:500;color:#344054;background:#fff}
+.tab-x{width:24px;height:24px;border:0;border-radius:6px;background:none;color:#98A2B3;display:inline-flex;align-items:center;justify-content:center}
+.tab-x:hover{background:#F2F4F7;color:#344054}
+.tab-add{width:44px;height:44px;border:0;background:none;color:#475467;display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
+.tab-add:hover{background:#F2F4F7}
+.card{margin-top:36px;border:1px solid #EAECF0;border-radius:14px;overflow:hidden}
+.toolbar{display:flex;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap}
+.dd{position:relative}
+.dd-btn{display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 14px 0 16px;border:1px solid #EAECF0;border-radius:9px;background:#fff;color:#475467;font-size:14.5px}
+.dd-btn:hover{border-color:#D0D5DD}
+.dd-btn.on{border-color:#2563EB;color:#1D4ED8;background:#F5F8FF}
+.dd-btn .chev{transition:transform .15s}
+.dd-btn.open .chev{transform:rotate(180deg)}
+.dd-n{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#2563EB;color:#fff;font-size:12px;font-weight:700}
+.scrim{position:fixed;inset:0;z-index:20;background:transparent;border:0;padding:0;cursor:default}
+.menu{position:absolute;top:48px;left:0;z-index:30;min-width:230px;background:#fff;border:1px solid #EAECF0;border-radius:12px;box-shadow:0 12px 24px -4px rgba(16,24,40,.12),0 4px 8px -2px rgba(16,24,40,.06);padding:6px}
+.opt{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14.5px;color:#344054}
+.opt:hover{background:#F9FAFB}
+.opt input{width:16px;height:16px;accent-color:#2563EB;margin:0}
+.opt-count{margin-left:auto;color:#98A2B3;font-size:13px}
+.menu-foot{display:flex;justify-content:flex-end;border-top:1px solid #F2F4F7;margin-top:4px;padding:6px 4px 2px}
+.link-btn{border:0;background:none;color:#2563EB;font-size:13.5px;font-weight:600;padding:6px 8px;border-radius:6px}
+.link-btn:hover{background:#EFF4FF}
+.search{margin-left:auto;position:relative;width:440px;max-width:100%}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#667085;pointer-events:none}
+.search input{width:100%;height:42px;padding:0 38px 0 42px;border:1px solid #D0D5DD;border-radius:9px;font-size:15.5px;background:#fff}
+.search input::placeholder{color:#667085}
+.search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:6px;background:none;color:#98A2B3;display:inline-flex;align-items:center;justify-content:center}
+.search-clear:hover{background:#F2F4F7;color:#344054}
+.scroll{overflow-x:auto}
+.grid{min-width:1060px}
+.cols{display:grid;grid-template-columns:minmax(230px,1.45fr) minmax(120px,1fr) minmax(130px,1fr) minmax(140px,1fr) minmax(130px,1fr) minmax(150px,1fr) minmax(130px,1fr)}
+.thead{background:#F5F6F8;border-top:1px solid #EAECF0}
+.th{height:48px;padding:0 18px;color:#475467;font-size:15px;display:flex;align-items:center;gap:12px;border-right:1px solid #EAECF0}
+.th:last-child{border-right:0}
+.th.num{justify-content:flex-end}
+.sort{height:100%;flex:1;display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:0;color:inherit;font-size:inherit;text-align:left}
+.th.num .sort{justify-content:flex-end}
+.sort:hover{color:#101828}
+.sort .idle{opacity:0;transition:opacity .12s}
+.sort:hover .idle{opacity:.5}
+.cb{width:17px;height:17px;margin:0;accent-color:#2563EB;cursor:pointer}
+.tr{border-top:1px solid #EAECF0;transition:background .1s}
+.tr:hover{background:#FAFBFC}
+.tr.sel{background:#F5F8FF}
+.td{height:58px;padding:0 18px;display:flex;align-items:center;gap:12px;font-size:15.5px;color:#1D2939;white-space:nowrap}
+.td.num{justify-content:flex-end;font-variant-numeric:tabular-nums}
+.av{width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;color:#fff;flex:none}
+.c0{background:#2563EB}.c1{background:#0F766E}.c2{background:#7C3AED}.c3{background:#C2410C}.c4{background:#BE185D}.c5{background:#1D2939}.c6{background:#047857}.c7{background:#B45309}
+.name-btn{border:0;background:none;padding:6px 0;font-size:15.5px;color:#101828;text-align:left;border-radius:4px}
+.name-btn:hover{color:#1D4ED8;text-decoration:underline;text-underline-offset:3px}
+.pill{display:inline-flex;align-items:center;height:24px;padding:0 8px;border:1px solid #D0D5DD;border-radius:6px;background:#F9FAFB;color:#344054;font-size:13.5px}
+.badge{display:inline-flex;align-items:center;height:24px;padding:0 8px;border:1px solid;border-radius:6px;font-size:13.5px;font-weight:500}
+.b-Active{background:#ECFDF3;border-color:#ABEFC6;color:#067647}
+.b-Trialing{background:#FFFAEB;border-color:#FEDF89;color:#B54708}
+.b-Canceled{background:#FEF3F2;border-color:#FECDCA;color:#B42318}
+.b-Pending{background:#EFF4FF;border-color:#C7D7FE;color:#3538CD}
+.empty{border-top:1px solid #EAECF0;padding:56px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#475467}
+.empty h2{margin:0;font-size:17px;color:#101828}
+.empty p{margin:0 0 6px;font-size:14.5px}
+.foot{display:flex;align-items:center;gap:6px;padding:12px 18px;border-top:1px solid #EAECF0;flex-wrap:wrap}
+.pg{min-width:44px;height:44px;padding:0 8px;border:0;border-radius:8px;background:none;color:#475467;font-size:16px}
+.pg:hover{background:#F2F4F7}
+.pg.on{background:#F2F4F7;color:#101828;font-weight:600}
+.pg:disabled{color:#D0D5DD;cursor:default;background:none}
+.gap{min-width:36px;text-align:center;color:#475467}
+.jump{display:flex;align-items:center;gap:10px;margin-left:16px;color:#667085;font-size:16px}
+.jump input{width:56px;height:44px;border:1px solid #D0D5DD;border-radius:8px;text-align:center;font-size:15px}
+.per{margin-left:auto;display:flex;align-items:center;gap:12px;color:#667085;font-size:16px}
+.per select{height:40px;border:0;background:none;font-size:16px;color:#101828;font-weight:600;padding:0 4px;cursor:pointer}
+.range{color:#98A2B3;font-size:13.5px}
+.bulk{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:35;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 16px;background:#101828;color:#fff;border-radius:12px;box-shadow:0 20px 24px -4px rgba(16,24,40,.18)}
+.bulk-n{font-size:14.5px;font-weight:600;margin-right:8px;white-space:nowrap}
+.bulk-btn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border:0;border-radius:8px;background:none;color:#fff;font-size:14px;font-weight:600;white-space:nowrap}
+.bulk-btn:hover{background:rgba(255,255,255,.12)}
+.bulk-btn.danger{color:#FDA29B}
+.bulk-sep{width:1px;height:22px;background:rgba(255,255,255,.18)}
+.toast{position:fixed;left:24px;bottom:24px;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 16px;background:#fff;border:1px solid #EAECF0;border-radius:12px;box-shadow:0 12px 24px -4px rgba(16,24,40,.14);font-size:14.5px;color:#101828;max-width:calc(100% - 48px)}
+.toast .ok{color:#079455;display:inline-flex}
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(16,24,40,.38);border:0;padding:0;cursor:default}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:50;width:440px;max-width:100%;background:#fff;box-shadow:-12px 0 32px rgba(16,24,40,.14);display:flex;flex-direction:column}
+.d-head{display:flex;align-items:center;gap:12px;padding:20px 20px 16px 24px;border-bottom:1px solid #EAECF0}
+.d-head h2{margin:0;font-size:20px;font-weight:700}
+.d-head .av{width:32px;height:32px;border-radius:9px;font-size:15px}
+.icon-btn{margin-left:auto;width:40px;height:40px;border:0;border-radius:8px;background:none;color:#667085;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:#F2F4F7;color:#101828}
+.d-body{flex:1;overflow:auto;padding:20px 24px;display:flex;flex-direction:column;gap:22px}
+.d-label{font-size:13px;font-weight:600;color:#475467;margin:0 0 8px}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:#F2F4F7;border-radius:10px}
+.seg-btn{height:40px;border:0;border-radius:7px;background:none;color:#475467;font-size:14px;font-weight:600}
+.seg-btn:hover{color:#101828}
+.seg-btn.on{background:#fff;color:#101828;box-shadow:0 1px 3px rgba(16,24,40,.1)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px;margin:0}
+.facts dt{font-size:13px;color:#667085;margin:0 0 4px}
+.facts dd{margin:0;font-size:15.5px;color:#101828;font-weight:600}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1 / -1}
+.field label{font-size:13.5px;font-weight:600;color:#344054}
+.field input,.field select{height:42px;border:1px solid #D0D5DD;border-radius:8px;padding:0 12px;font-size:15px;background:#fff}
+.field input.bad{border-color:#FDA29B}
+.err{font-size:13px;color:#B42318}
+.d-foot{display:flex;gap:10px;padding:16px 24px;border-top:1px solid #EAECF0;flex-wrap:wrap}
+.d-foot .spacer{flex:1}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;width:540px;max-width:calc(100% - 32px);max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:16px;box-shadow:0 24px 48px -12px rgba(16,24,40,.25)}
+.m-head{display:flex;align-items:flex-start;gap:12px;padding:22px 20px 6px 24px}
+.m-head h2{margin:0;font-size:19px;font-weight:700}
+.m-head p{margin:4px 0 0;font-size:14px;color:#475467}
+.m-body{padding:16px 24px 8px}
+.m-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px 22px}
+@media (max-width:760px){
+.wrap{padding:8px}
+.panel{padding:24px 16px;border-radius:16px}
+.title h1{font-size:23px}
+.tabs{gap:18px}
+.search{margin-left:0;width:100%}
+.jump{margin-left:0}
+.per{margin-left:0}
+.fields{grid-template-columns:minmax(0,1fr)}
+.bulk{left:8px;right:8px;transform:none;overflow-x:auto}
+}
+</style>
+</helmet>
+<div class="wrap">
+<div class="panel">
+
+<div class="header">
+<div class="title">
+<span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 7.2v9.6L12 21.2 4 16.8V7.2z"></path><path d="M4 7.2 12 11.6l8-4.4"></path><path d="M12 11.6v9.6"></path><path d="m8 5 8 4.4"></path></svg></span>
+<h1>Subscriptions</h1>
+</div>
+<button type="button" class="btn-primary" onClick="{{openModal}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add subscription</button>
+</div>
+
+<div class="tabs" role="tablist" aria-label="Subscription lists">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<div class="tab-wrap">
+<button type="button" role="tab" aria-selected="{{t.active}}" class="{{t.cls}}" onClick="{{t.pick}}">{{t.label}} <span class="count">{{t.count}}</span></button>
+<sc-if value="{{t.removable}}" hint-placeholder-val="{{false}}">
+<button type="button" class="tab-x" aria-label="{{t.removeLabel}}" onClick="{{t.remove}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</sc-if>
+</div>
+</sc-for>
+<button type="button" class="tab-add" aria-label="Save current filters as a new view" title="Save current filters as a view" onClick="{{addView}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+
+<div class="card">
+<div class="toolbar">
+
+<div class="dd">
+<button type="button" class="{{statusBtnCls}}" aria-expanded="{{statusOpen}}" onClick="{{toggleStatusMenu}}">Status
+<sc-if value="{{statusCount}}" hint-placeholder-val="{{false}}"><span class="dd-n">{{statusCount}}</span></sc-if>
+<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<sc-if value="{{statusOpen}}" hint-placeholder-val="{{false}}">
+<button type="button" class="scrim" aria-label="Close menu" onClick="{{closeMenus}}"></button>
+<div class="menu">
+<sc-for list="{{statusOpts}}" as="o" hint-placeholder-count="4">
+<label class="opt"><input type="checkbox" checked="{{o.on}}" onChange="{{o.toggle}}"><span class="{{o.badgeCls}}">{{o.label}}</span><span class="opt-count">{{o.count}}</span></label>
+</sc-for>
+<div class="menu-foot"><button type="button" class="link-btn" onClick="{{clearStatus}}">Clear</button></div>
+</div>
+</sc-if>
+</div>
+
+<div class="dd">
+<button type="button" class="{{payBtnCls}}" aria-expanded="{{payOpen}}" onClick="{{togglePayMenu}}">Payment method
+<sc-if value="{{payCount}}" hint-placeholder-val="{{false}}"><span class="dd-n">{{payCount}}</span></sc-if>
+<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<sc-if value="{{payOpen}}" hint-placeholder-val="{{false}}">
+<button type="button" class="scrim" aria-label="Close menu" onClick="{{closeMenus}}"></button>
+<div class="menu">
+<sc-for list="{{payOpts}}" as="o" hint-placeholder-count="4">
+<label class="opt"><input type="checkbox" checked="{{o.on}}" onChange="{{o.toggle}}"><span>{{o.label}}</span><span class="opt-count">{{o.count}}</span></label>
+</sc-for>
+<div class="menu-foot"><button type="button" class="link-btn" onClick="{{clearPay}}">Clear</button></div>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{hasFilters}}" hint-placeholder-val="{{false}}">
+<button type="button" class="link-btn" onClick="{{clearAll}}">Clear filters</button>
+</sc-if>
+
+<div class="search">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input type="search" placeholder="Search" aria-label="Search subscriptions" value="{{q}}" onChange="{{setQ}}">
+<sc-if value="{{q}}" hint-placeholder-val="{{false}}">
+<button type="button" class="search-clear" aria-label="Clear search" onClick="{{clearQ}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</sc-if>
+</div>
+</div>
+
+<div class="scroll">
+<div class="grid" role="table" aria-label="Subscriptions">
+<div class="cols thead" role="row">
+<div class="th" role="columnheader">
+<input type="checkbox" class="cb" aria-label="Select all rows on this page" checked="{{allChecked}}" onChange="{{toggleAll}}">
+<button type="button" class="sort" onClick="{{nameCol.sort}}">Client Name
+<sc-if value="{{nameCol.asc}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"></path></svg></sc-if>
+<sc-if value="{{nameCol.desc}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6"></path></svg></sc-if>
+<sc-if value="{{nameCol.idle}}" hint-placeholder-val="{{true}}"><svg class="idle" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 9 5-5 5 5M7 15l5 5 5-5"></path></svg></sc-if>
+</button>
+</div>
+<sc-for list="{{cols}}" as="c" hint-placeholder-count="6">
+<div class="{{c.cls}}" role="columnheader">
+<button type="button" class="sort" onClick="{{c.sort}}">{{c.label}}
+<sc-if value="{{c.asc}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"></path></svg></sc-if>
+<sc-if value="{{c.desc}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6"></path></svg></sc-if>
+<sc-if value="{{c.idle}}" hint-placeholder-val="{{true}}"><svg class="idle" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 9 5-5 5 5M7 15l5 5 5-5"></path></svg></sc-if>
+</button>
+</div>
+</sc-for>
+</div>
+
+<sc-for list="{{pageRows}}" as="r" hint-placeholder-count="10">
+<div class="{{r.rowCls}}" role="row">
+<div class="td" role="cell">
+<input type="checkbox" class="cb" checked="{{r.selected}}" onChange="{{r.toggle}}" aria-label="{{r.selectLabel}}">
+<span class="{{r.avCls}}" aria-hidden="true">{{r.initial}}</span>
+<button type="button" class="name-btn" onClick="{{r.open}}">{{r.name}}</button>
+</div>
+<div class="td" role="cell">{{r.plan}}</div>
+<div class="td" role="cell"><span class="pill">{{r.cycle}}</span></div>
+<div class="td" role="cell">{{r.startLabel}}</div>
+<div class="td" role="cell"><span class="{{r.badgeCls}}">{{r.status}}</span></div>
+<div class="td" role="cell">{{r.renewalLabel}}</div>
+<div class="td num" role="cell">{{r.mrrLabel}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{noResults}}" hint-placeholder-val="{{false}}">
+<div class="empty">
+<h2>No subscriptions found</h2>
+<p>Nothing in this list matches your search or filters.</p>
+<button type="button" class="btn" onClick="{{clearAll}}">Clear search and filters</button>
+</div>
+</sc-if>
+
+<div class="foot">
+<button type="button" class="pg" aria-label="Previous page" disabled="{{prevDisabled}}" onClick="{{prevPage}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+<sc-for list="{{pages}}" as="p" hint-placeholder-count="7">
+<sc-if value="{{p.isGap}}" hint-placeholder-val="{{false}}"><span class="gap" aria-hidden="true">…</span></sc-if>
+<sc-if value="{{p.isPage}}" hint-placeholder-val="{{true}}"><button type="button" class="{{p.cls}}" aria-current="{{p.current}}" aria-label="{{p.aria}}" onClick="{{p.go}}">{{p.label}}</button></sc-if>
+</sc-for>
+<button type="button" class="pg" aria-label="Next page" disabled="{{nextDisabled}}" onClick="{{nextPage}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+<div class="jump"><label for="jump-input">Jump to page:</label><input id="jump-input" inputmode="numeric" value="{{jump}}" onChange="{{setJump}}" onKeyDown="{{jumpKey}}" onBlur="{{doJump}}"></div>
+<div class="per"><span class="range">{{rangeLabel}}</span><label for="per-select">No of groups</label>
+<select id="per-select" value="{{perPage}}" onChange="{{setPerPage}}"><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<sc-if value="{{bulkOpen}}" hint-placeholder-val="{{false}}">
+<div class="bulk" role="toolbar" aria-label="Bulk actions">
+<span class="bulk-n">{{selectedLabel}}</span>
+<sc-if value="{{canMarkActive}}" hint-placeholder-val="{{true}}"><button type="button" class="bulk-btn" onClick="{{bulkActive}}">Mark active</button></sc-if>
+<sc-if value="{{canConvert}}" hint-placeholder-val="{{false}}"><button type="button" class="bulk-btn" onClick="{{bulkConvert}}">Convert to trial</button></sc-if>
+<sc-if value="{{canArchive}}" hint-placeholder-val="{{true}}"><button type="button" class="bulk-btn" onClick="{{bulkArchive}}">Archive</button></sc-if>
+<sc-if value="{{canRestore}}" hint-placeholder-val="{{false}}"><button type="button" class="bulk-btn" onClick="{{bulkRestore}}">Restore</button></sc-if>
+<button type="button" class="bulk-btn danger" onClick="{{bulkDelete}}">Delete</button>
+<span class="bulk-sep" aria-hidden="true"></span>
+<button type="button" class="bulk-btn" aria-label="Clear selection" onClick="{{clearSel}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+</sc-if>
+
+<sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+<button type="button" class="overlay" aria-label="Close details" onClick="{{closeDrawer}}"></button>
+<div class="drawer" role="dialog" aria-modal="true" aria-label="{{d.name}}" onKeyDown="{{escClose}}">
+<div class="d-head">
+<span class="{{d.avCls}}" aria-hidden="true">{{d.initial}}</span>
+<div><h2>{{d.name}}</h2></div>
+<button type="button" class="icon-btn" aria-label="Close details" onClick="{{closeDrawer}}" autoFocus="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+<div class="d-body">
+<sc-if value="{{d.isMain}}" hint-placeholder-val="{{true}}">
+<div>
+<p class="d-label">Status</p>
+<div class="seg">
+<sc-for list="{{d.statusBtns}}" as="b" hint-placeholder-count="3">
+<button type="button" class="{{b.cls}}" aria-pressed="{{b.on}}" onClick="{{b.pick}}">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{d.notMain}}" hint-placeholder-val="{{false}}">
+<div><p class="d-label">Status</p><span class="{{d.badgeCls}}">{{d.status}}</span></div>
+</sc-if>
+<dl class="facts">
+<div><dt>Monthly recurring revenue</dt><dd>{{d.mrrLabel}}</dd></div>
+<div><dt>Start date</dt><dd>{{d.startLabel}}</dd></div>
+<div><dt>Next renewal</dt><dd>{{d.renewalLabel}}</dd></div>
+<div><dt>Payment method</dt><dd>{{d.payment}}</dd></div>
+</dl>
+<div>
+<p class="d-label">Edit subscription</p>
+<div class="fields">
+<div class="field"><label for="d-plan">Plan</label>
+<select id="d-plan" value="{{d.plan}}" onChange="{{d.setPlan}}"><option>Starter</option><option>Pro</option><option>Growth</option><option>Enterprise</option></select></div>
+<div class="field"><label for="d-cycle">Billing cycle</label>
+<select id="d-cycle" value="{{d.cycle}}" onChange="{{d.setCycle}}"><option>Monthly</option><option>Quarterly</option><option>Annual</option></select></div>
+<div class="field full"><label for="d-pay">Payment method</label>
+<select id="d-pay" value="{{d.payment}}" onChange="{{d.setPayment}}"><option>Card</option><option>ACH</option><option>Invoice</option><option>PayPal</option></select></div>
+</div>
+</div>
+</div>
+<div class="d-foot">
+<sc-if value="{{d.isPipeline}}" hint-placeholder-val="{{false}}"><button type="button" class="btn-primary" onClick="{{d.convert}}">Convert to trial</button></sc-if>
+<sc-if value="{{d.isArchived}}" hint-placeholder-val="{{false}}"><button type="button" class="btn" onClick="{{d.restore}}">Restore</button></sc-if>
+<sc-if value="{{d.canArchive}}" hint-placeholder-val="{{true}}"><button type="button" class="btn" onClick="{{d.archive}}">Archive</button></sc-if>
+<span class="spacer"></span>
+<button type="button" class="btn btn-danger" onClick="{{d.del}}">Delete</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{modalOpen}}" hint-placeholder-val="{{false}}">
+<button type="button" class="overlay" aria-label="Close dialog" onClick="{{closeModal}}"></button>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title" onKeyDown="{{escClose}}">
+<form onSubmit="{{submit}}" novalidate="{{true}}">
+<div class="m-head">
+<div><h2 id="m-title">Add subscription</h2><p>Pending subscriptions go to the Pipeline tab.</p></div>
+<button type="button" class="icon-btn" aria-label="Close dialog" onClick="{{closeModal}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+<div class="m-body">
+<div class="fields">
+<div class="field full"><label for="f-name">Client name</label>
+<input id="f-name" class="{{nameCls}}" value="{{form.name}}" onChange="{{f.name}}" placeholder="e.g. Acme Inc." autoFocus="{{true}}">
+<sc-if value="{{errName}}" hint-placeholder-val="{{false}}"><span class="err">{{errName}}</span></sc-if></div>
+<div class="field"><label for="f-plan">Plan</label>
+<select id="f-plan" value="{{form.plan}}" onChange="{{f.plan}}"><option>Starter</option><option>Pro</option><option>Growth</option><option>Enterprise</option></select></div>
+<div class="field"><label for="f-cycle">Billing cycle</label>
+<select id="f-cycle" value="{{form.cycle}}" onChange="{{f.cycle}}"><option>Monthly</option><option>Quarterly</option><option>Annual</option></select></div>
+<div class="field"><label for="f-start">Start date</label>
+<input id="f-start" type="date" class="{{startCls}}" value="{{form.start}}" onChange="{{f.start}}">
+<sc-if value="{{errStart}}" hint-placeholder-val="{{false}}"><span class="err">{{errStart}}</span></sc-if></div>
+<div class="field"><label for="f-status">Status</label>
+<select id="f-status" value="{{form.status}}" onChange="{{f.status}}"><option>Active</option><option>Trialing</option><option>Pending</option></select></div>
+<div class="field"><label for="f-pay">Payment method</label>
+<select id="f-pay" value="{{form.payment}}" onChange="{{f.payment}}"><option>Card</option><option>ACH</option><option>Invoice</option><option>PayPal</option></select></div>
+<div class="field"><label for="f-mrr">MRR ($)</label>
+<input id="f-mrr" inputmode="decimal" class="{{mrrCls}}" value="{{form.mrr}}" onChange="{{f.mrr}}" placeholder="0.00">
+<sc-if value="{{errMrr}}" hint-placeholder-val="{{false}}"><span class="err">{{errMrr}}</span></sc-if></div>
+</div>
+</div>
+<div class="m-foot">
+<button type="button" class="btn" onClick="{{closeModal}}">Cancel</button>
+<button type="submit" class="btn-primary">Add subscription</button>
+</div>
+</form>
+</div>
+</sc-if>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+<div class="toast" role="status">
+<span class="ok" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 3 3 5-6"></path></svg></span>
+<span>{{toast.msg}}</span>
+<sc-if value="{{toast.undo}}" hint-placeholder-val="{{false}}"><button type="button" class="link-btn" onClick="{{undo}}">Undo</button></sc-if>
+<button type="button" class="icon-btn" style="width: 32px; height: 32px; margin-left: 0" aria-label="Dismiss" onClick="{{hideToast}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: Component.seed(),
+      tab: 'main', views: [],
+      statuses: [], payments: [], q: '',
+      sortKey: null, sortDir: 'asc',
+      page: 1, perPage: 10, jump: '',
+      selected: [], menu: null, openId: null,
+      modal: false, form: Component.blankForm(), formErr: {},
+      toast: null, prevRows: null
+    };
+  }
+
+  static seed() {
+    const d = [
+      ['Atlassian','Enterprise','Monthly','2025-02-12','Active','2025-03-12',890,'Card','main'],
+      ['Dropbox','Pro','Monthly','2025-01-01','Active','2026-01-01',2400,'Invoice','main'],
+      ['Evernote','Starter','Annual','2025-03-05','Active','2025-04-05',120,'PayPal','main'],
+      ['Github','Growth','Annual','2025-01-15','Active','2025-04-15',560,'Card','main'],
+      ['Gitlab','Enterprise','Monthly','2024-11-10','Active','2025-11-10',2300,'ACH','main'],
+      ['Intercom','Growth','Quarterly','2025-02-22','Trialing','2025-03-22',580,'Card','main'],
+      ['Loom','Enterprise','Quarterly','2025-03-01','Trialing','2025-04-01',900,'Invoice','main'],
+      ['Linear','Growth','Monthly','2025-03-10','Trialing','2025-04-10',150,'Card','main'],
+      ['Zapier','Enterprise','Monthly','2025-02-01','Trialing','2026-02-01',2700,'ACH','main'],
+      ['Zendesk','Growth','Monthly','2024-12-20','Canceled','2025-03-20',1050,'Card','main'],
+      ['Asana','Growth','Monthly','2025-01-08','Active','2025-02-08',640,'Card','main'],
+      ['Slack','Enterprise','Annual','2024-09-01','Active','2025-09-01',3100,'Invoice','main'],
+      ['Figma','Pro','Monthly','2025-03-02','Active','2025-04-02',420,'Card','main'],
+      ['Notion','Growth','Quarterly','2025-01-20','Active','2025-04-20',760,'ACH','main'],
+      ['Airtable','Pro','Monthly','2025-02-14','Trialing','2025-03-14',310,'Card','main'],
+      ['Calendly','Starter','Monthly','2025-03-11','Active','2025-04-11',95,'PayPal','main'],
+      ['Hubspot','Enterprise','Annual','2024-12-01','Active','2025-12-01',2950,'Invoice','main'],
+      ['Mailchimp','Growth','Monthly','2024-11-18','Canceled','2025-02-18',280,'Card','main'],
+      ['Sentry','Pro','Quarterly','2025-02-03','Active','2025-05-03',510,'ACH','main'],
+      ['Postman','Growth','Monthly','2025-03-07','Trialing','2025-04-07',360,'Card','main'],
+      ['Vercel','Pro','Monthly','2025-01-28','Active','2025-02-28',470,'Card','main'],
+      ['Segment','Enterprise','Annual','2024-10-15','Active','2025-10-15',1800,'Invoice','main'],
+      ['Retool','Growth','Monthly','2025-02-25','Trialing','2025-03-25',540,'Card','main'],
+      ['Miro','Starter','Annual','2025-01-03','Active','2026-01-03',180,'PayPal','main'],
+      ['Webflow','Growth','Monthly','2025-04-01','Pending','',600,'Invoice','pipeline'],
+      ['Canva','Pro','Annual','2025-04-15','Pending','',350,'Card','pipeline'],
+      ['Discord','Starter','Monthly','2025-04-08','Pending','',140,'Card','pipeline'],
+      ['Shopify','Enterprise','Quarterly','2025-05-01','Pending','',2200,'ACH','pipeline'],
+      ['Twilio','Growth','Monthly','2025-04-20','Pending','',820,'Invoice','pipeline'],
+      ['Trello','Pro','Monthly','2023-06-10','Canceled','2024-06-10',220,'Card','archived'],
+      ['Basecamp','Growth','Annual','2022-11-01','Canceled','2024-11-01',990,'Invoice','archived'],
+      ['Hipchat','Starter','Monthly','2021-03-15','Canceled','2021-09-15',80,'Card','archived']
+    ];
+    return d.map((x, i) => ({ id: 's' + i, color: i % 8, name: x[0], plan: x[1], cycle: x[2], start: x[3], status: x[4], renewal: x[5], mrr: x[6], payment: x[7], group: x[8] }));
+  }
+
+  static blankForm() {
+    return { name: '', plan: 'Growth', cycle: 'Monthly', start: new Date().toISOString().slice(0, 10), status: 'Trialing', payment: 'Card', mrr: '' };
+  }
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  fmtDate(iso) {
+    if (!iso) return '—';
+    const p = iso.split('-').map(Number);
+    const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][p[1] - 1];
+    return m + ' ' + String(p[2]).padStart(2, '0') + ', ' + p[0];
+  }
+  addMonths(iso, n) {
+    const p = iso.split('-').map(Number);
+    return new Date(Date.UTC(p[0], p[1] - 1 + n, p[2])).toISOString().slice(0, 10);
+  }
+  cycleMonths(c) { return c === 'Annual' ? 12 : c === 'Quarterly' ? 3 : 1; }
+  money(n) { return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  plural(n, one) { return n === 1 ? one : n + ' subscriptions'; }
+
+  cmp(a, b, k) {
+    const rank = {
+      plan: ['Starter','Pro','Growth','Enterprise'],
+      cycle: ['Monthly','Quarterly','Annual'],
+      status: ['Active','Trialing','Pending','Canceled']
+    };
+    if (rank[k]) return rank[k].indexOf(a[k]) - rank[k].indexOf(b[k]);
+    if (k === 'mrr') return a.mrr - b.mrr;
+    return String(a[k] || '').localeCompare(String(b[k] || ''));
+  }
+
+  applyFilters(rows, group, statuses, payments, q) {
+    const qq = (q || '').trim().toLowerCase();
+    return rows.filter((r) => r.group === group
+      && (!statuses.length || statuses.includes(r.status))
+      && (!payments.length || payments.includes(r.payment))
+      && (!qq || (r.name + ' ' + r.plan + ' ' + r.cycle + ' ' + r.status + ' ' + r.payment).toLowerCase().includes(qq)));
+  }
+
+  currentView() { return this.state.views.find((v) => v.id === this.state.tab); }
+
+  setFilters(patch) {
+    const v = this.currentView();
+    const next = Object.assign({ page: 1, selected: [] }, patch);
+    if (v) {
+      next.views = this.state.views.map((x) => x.id === v.id ? Object.assign({}, x, {
+        statuses: patch.statuses !== undefined ? patch.statuses : x.statuses,
+        payments: patch.payments !== undefined ? patch.payments : x.payments,
+        q: patch.q !== undefined ? patch.q : x.q
+      }) : x);
+    }
+    this.setState(next);
+  }
+
+  flash(msg, prevRows) {
+    clearTimeout(this._t);
+    this.setState({ toast: { msg: msg, undo: !!prevRows }, prevRows: prevRows || null });
+    this._t = setTimeout(() => this.setState({ toast: null, prevRows: null }), 5000);
+  }
+
+  mutate(ids, fn, msg, undoable, extra) {
+    const prev = this.state.rows;
+    const set = new Set(ids);
+    this.setState(Object.assign({ rows: prev.map((r) => set.has(r.id) ? Object.assign({}, r, fn(r)) : r), selected: [] }, extra || {}));
+    this.flash(msg, undoable ? prev : null);
+  }
+
+  removeRows(ids, msg) {
+    const prev = this.state.rows;
+    const set = new Set(ids);
+    this.setState({ rows: prev.filter((r) => !set.has(r.id)), selected: [], openId: set.has(this.state.openId) ? null : this.state.openId });
+    this.flash(msg, prev);
+  }
+
+  nameOf(ids) {
+    if (ids.length !== 1) return ids.length + ' subscriptions';
+    const r = this.state.rows.find((x) => x.id === ids[0]);
+    return r ? r.name : '1 subscription';
+  }
+
+  renderVals() {
+    const s = this.state;
+    const view = this.currentView();
+    const group = view ? view.group : s.tab;
+    const base = s.rows.filter((r) => r.group === group);
+    let list = this.applyFilters(s.rows, group, s.statuses, s.payments, s.q);
+    if (s.sortKey) {
+      const k = s.sortKey, dir = s.sortDir === 'asc' ? 1 : -1;
+      list = list.slice().sort((a, b) => this.cmp(a, b, k) * dir);
+    }
+    const total = list.length;
+    const pageCount = Math.max(1, Math.ceil(total / s.perPage));
+    const page = Math.min(s.page, pageCount);
+    const pageList = list.slice((page - 1) * s.perPage, page * s.perPage);
+    const sel = new Set(s.selected);
+    const go = (n) => this.setState({ page: Math.max(1, Math.min(pageCount, n)), selected: [] });
+
+    const builtIn = [['main', 'All'], ['pipeline', 'Pipeline'], ['archived', 'Archived']];
+    const tabs = builtIn.map((b) => ({
+      key: b[0], label: b[1], count: s.rows.filter((r) => r.group === b[0]).length, removable: false
+    })).concat(s.views.map((v) => ({
+      key: v.id, label: v.name, count: this.applyFilters(s.rows, v.group, v.statuses, v.payments, v.q).length,
+      removable: true, removeLabel: 'Remove view ' + v.name,
+      remove: () => {
+        const rest = s.views.filter((x) => x.id !== v.id);
+        this.setState({ views: rest, tab: s.tab === v.id ? v.group : s.tab, page: 1, selected: [] });
+        this.flash('Removed “' + v.name + '”');
+      }
+    }))).map((t) => Object.assign(t, {
+      active: s.tab === t.key,
+      cls: 'tab' + (s.tab === t.key ? ' on' : ''),
+      pick: () => {
+        const v = s.views.find((x) => x.id === t.key);
+        const patch = { tab: t.key, page: 1, selected: [], menu: null };
+        if (v) Object.assign(patch, { statuses: v.statuses.slice(), payments: v.payments.slice(), q: v.q });
+        else if (view) Object.assign(patch, { statuses: [], payments: [], q: '' });
+        this.setState(patch);
+      }
+    }));
+
+    const toggleIn = (arr, x) => arr.includes(x) ? arr.filter((y) => y !== x) : arr.concat([x]);
+    const statusOpts = ['Active', 'Trialing', 'Pending', 'Canceled'].map((x) => ({
+      label: x, on: s.statuses.includes(x), badgeCls: 'badge b-' + x,
+      count: base.filter((r) => r.status === x).length,
+      toggle: () => this.setFilters({ statuses: toggleIn(s.statuses, x) })
+    }));
+    const payOpts = ['Card', 'ACH', 'Invoice', 'PayPal'].map((x) => ({
+      label: x, on: s.payments.includes(x),
+      count: base.filter((r) => r.payment === x).length,
+      toggle: () => this.setFilters({ payments: toggleIn(s.payments, x) })
+    }));
+
+    const colDef = (key, label, num) => {
+      const on = s.sortKey === key;
+      return {
+        key: key, label: label, cls: 'th' + (num ? ' num' : ''),
+        asc: on && s.sortDir === 'asc', desc: on && s.sortDir === 'desc', idle: !on,
+        sort: () => {
+          if (!on) this.setState({ sortKey: key, sortDir: 'asc', page: 1 });
+          else if (s.sortDir === 'asc') this.setState({ sortDir: 'desc', page: 1 });
+          else this.setState({ sortKey: null, sortDir: 'asc', page: 1 });
+        }
+      };
+    };
+
+    const pageRows = pageList.map((r) => ({
+      id: r.id, name: r.name, plan: r.plan, cycle: r.cycle, status: r.status,
+      initial: r.name.charAt(0).toUpperCase(),
+      avCls: 'av c' + r.color,
+      badgeCls: 'badge b-' + r.status,
+      startLabel: this.fmtDate(r.start),
+      renewalLabel: this.fmtDate(r.renewal),
+      mrrLabel: this.money(r.mrr),
+      selected: sel.has(r.id),
+      rowCls: 'cols tr' + (sel.has(r.id) ? ' sel' : ''),
+      selectLabel: 'Select ' + r.name,
+      toggle: () => this.setState({ selected: sel.has(r.id) ? s.selected.filter((x) => x !== r.id) : s.selected.concat([r.id]) }),
+      open: () => this.setState({ openId: r.id, menu: null })
+    }));
+
+    const allChecked = pageList.length > 0 && pageList.every((r) => sel.has(r.id));
+
+    let nums;
+    if (pageCount <= 7) nums = Array.from({ length: pageCount }, (_, i) => i + 1);
+    else if (page <= 3 || page >= pageCount - 2) nums = [1, 2, 3, 0, pageCount - 2, pageCount - 1, pageCount];
+    else nums = [1, 0, page - 1, page, page + 1, 0, pageCount];
+    const pages = nums.map((n) => ({
+      isGap: n === 0, isPage: n !== 0, label: String(n),
+      current: n === page ? 'page' : undefined,
+      aria: 'Page ' + n,
+      cls: 'pg' + (n === page ? ' on' : ''),
+      go: () => go(n)
+    }));
+
+    const ids = s.selected;
+    const openRow = s.rows.find((r) => r.id === s.openId);
+    let d = {};
+    if (openRow) {
+      const r = openRow;
+      const upd = (patch, msg) => this.mutate([r.id], () => patch, msg, false);
+      d = {
+        name: r.name, initial: r.name.charAt(0).toUpperCase(), avCls: 'av c' + r.color,
+        status: r.status, badgeCls: 'badge b-' + r.status,
+        plan: r.plan, cycle: r.cycle, payment: r.payment,
+        startLabel: this.fmtDate(r.start), renewalLabel: this.fmtDate(r.renewal), mrrLabel: this.money(r.mrr),
+        isMain: r.group === 'main', notMain: r.group !== 'main',
+        isPipeline: r.group === 'pipeline', isArchived: r.group === 'archived', canArchive: r.group !== 'archived',
+        statusBtns: ['Active', 'Trialing', 'Canceled'].map((x) => ({
+          label: x, on: r.status === x, cls: 'seg-btn' + (r.status === x ? ' on' : ''),
+          pick: () => { if (r.status !== x) upd({ status: x }, r.name + ' marked ' + x.toLowerCase()); }
+        })),
+        setPlan: (e) => upd({ plan: e.target.value }, r.name + ' moved to ' + e.target.value),
+        setCycle: (e) => upd({ cycle: e.target.value, renewal: r.status === 'Pending' ? '' : this.addMonths(r.start, this.cycleMonths(e.target.value)) }, r.name + ' now billed ' + e.target.value.toLowerCase()),
+        setPayment: (e) => upd({ payment: e.target.value }, 'Payment method updated'),
+        archive: () => this.mutate([r.id], () => ({ group: 'archived' }), r.name + ' archived', true, { openId: null }),
+        restore: () => this.mutate([r.id], () => ({ group: 'main' }), r.name + ' restored to All', true, { openId: null }),
+        convert: () => this.mutate([r.id], (x) => ({ group: 'main', status: 'Trialing', renewal: this.addMonths(x.start, this.cycleMonths(x.cycle)) }), r.name + ' converted to a trial', true, { openId: null }),
+        del: () => this.removeRows([r.id], r.name + ' deleted')
+      };
+    }
+
+    const fe = s.formErr;
+    const setField = (k) => (e) => this.setState({ form: Object.assign({}, s.form, { [k]: e.target.value }), formErr: Object.assign({}, fe, { [k]: null }) });
+    const first = total === 0 ? 0 : (page - 1) * s.perPage + 1;
+
+    return {
+      tabs: tabs,
+      openModal: () => this.setState({ modal: true, form: Component.blankForm(), formErr: {}, menu: null }),
+      closeModal: () => this.setState({ modal: false }),
+      addView: () => {
+        const n = s.views.length + 1;
+        const v = { id: 'v' + Date.now(), name: 'View ' + n, group: group, statuses: s.statuses.slice(), payments: s.payments.slice(), q: s.q };
+        this.setState({ views: s.views.concat([v]), tab: v.id, page: 1, selected: [] });
+        this.flash('Saved current filters as “' + v.name + '”');
+      },
+
+      statusOpen: s.menu === 'status', payOpen: s.menu === 'pay',
+      statusCount: s.statuses.length, payCount: s.payments.length,
+      statusBtnCls: 'dd-btn' + (s.statuses.length ? ' on' : '') + (s.menu === 'status' ? ' open' : ''),
+      payBtnCls: 'dd-btn' + (s.payments.length ? ' on' : '') + (s.menu === 'pay' ? ' open' : ''),
+      toggleStatusMenu: () => this.setState({ menu: s.menu === 'status' ? null : 'status' }),
+      togglePayMenu: () => this.setState({ menu: s.menu === 'pay' ? null : 'pay' }),
+      closeMenus: () => this.setState({ menu: null }),
+      statusOpts: statusOpts, payOpts: payOpts,
+      clearStatus: () => this.setFilters({ statuses: [] }),
+      clearPay: () => this.setFilters({ payments: [] }),
+      hasFilters: !!(s.statuses.length || s.payments.length || s.q),
+      clearAll: () => this.setFilters({ statuses: [], payments: [], q: '', menu: null }),
+      q: s.q,
+      setQ: (e) => this.setFilters({ q: e.target.value }),
+      clearQ: () => this.setFilters({ q: '' }),
+
+      nameCol: colDef('name', 'Client Name'),
+      cols: [colDef('plan', 'Plan'), colDef('cycle', 'Billing Cycle'), colDef('start', 'Start Date'), colDef('status', 'Status'), colDef('renewal', 'Next Renewal'), colDef('mrr', 'MRR ($)', true)],
+      allChecked: allChecked,
+      toggleAll: () => {
+        const pageIds = pageList.map((r) => r.id);
+        this.setState({ selected: allChecked ? s.selected.filter((x) => !pageIds.includes(x)) : Array.from(new Set(s.selected.concat(pageIds))) });
+      },
+      pageRows: pageRows,
+      noResults: total === 0,
+
+      pages: pages,
+      prevDisabled: page <= 1, nextDisabled: page >= pageCount,
+      prevPage: () => go(page - 1), nextPage: () => go(page + 1),
+      jump: s.jump,
+      setJump: (e) => this.setState({ jump: e.target.value.replace(/[^0-9]/g, '') }),
+      jumpKey: (e) => { if (e.key === 'Enter') { const n = parseInt(s.jump, 10); if (n) go(n); this.setState({ jump: '' }); } },
+      doJump: () => { const n = parseInt(s.jump, 10); if (n) go(n); this.setState({ jump: '' }); },
+      perPage: String(s.perPage),
+      setPerPage: (e) => this.setState({ perPage: Number(e.target.value), page: 1, selected: [] }),
+      rangeLabel: total ? first + '–' + (first + pageList.length - 1) + ' of ' + total : '0 results',
+
+      bulkOpen: ids.length > 0,
+      selectedLabel: ids.length + ' selected',
+      canMarkActive: group === 'main', canConvert: group === 'pipeline',
+      canArchive: group !== 'archived', canRestore: group === 'archived',
+      bulkActive: () => this.mutate(ids, () => ({ status: 'Active' }), this.nameOf(ids) + ' marked active', true),
+      bulkConvert: () => this.mutate(ids, (x) => ({ group: 'main', status: 'Trialing', renewal: this.addMonths(x.start, this.cycleMonths(x.cycle)) }), this.nameOf(ids) + ' converted to trials', true),
+      bulkArchive: () => this.mutate(ids, () => ({ group: 'archived' }), this.nameOf(ids) + ' archived', true),
+      bulkRestore: () => this.mutate(ids, () => ({ group: 'main' }), this.nameOf(ids) + ' restored', true),
+      bulkDelete: () => this.removeRows(ids, this.nameOf(ids) + ' deleted'),
+      clearSel: () => this.setState({ selected: [] }),
+
+      drawerOpen: !!openRow, d: d,
+      closeDrawer: () => this.setState({ openId: null }),
+      escClose: (e) => { if (e.key === 'Escape') this.setState({ openId: null, modal: false }); },
+
+      modalOpen: s.modal, form: s.form,
+      f: { name: setField('name'), plan: setField('plan'), cycle: setField('cycle'), start: setField('start'), status: setField('status'), payment: setField('payment'), mrr: setField('mrr') },
+      errName: fe.name || '', errStart: fe.start || '', errMrr: fe.mrr || '',
+      nameCls: fe.name ? 'bad' : '', startCls: fe.start ? 'bad' : '', mrrCls: fe.mrr ? 'bad' : '',
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const f = s.form, err = {};
+        const raw = String(f.mrr).replace(/[$,\s]/g, '');
+        const m = parseFloat(raw);
+        if (!f.name.trim()) err.name = 'Enter a client name';
+        if (!f.start) err.start = 'Pick a start date';
+        if (raw === '' || isNaN(m) || m < 0) err.mrr = 'Enter MRR as a number';
+        if (Object.keys(err).length) { this.setState({ formErr: err }); return; }
+        const pending = f.status === 'Pending';
+        const row = {
+          id: 'n' + Date.now(), color: s.rows.length % 8, name: f.name.trim(), plan: f.plan, cycle: f.cycle,
+          start: f.start, status: f.status, renewal: pending ? '' : this.addMonths(f.start, this.cycleMonths(f.cycle)),
+          mrr: m, payment: f.payment, group: pending ? 'pipeline' : 'main'
+        };
+        this.setState({ rows: [row].concat(s.rows), modal: false, formErr: {}, tab: row.group, statuses: [], payments: [], q: '', sortKey: null, page: 1, selected: [] });
+        this.flash('Added ' + row.name + (pending ? ' to Pipeline' : ''));
+      },
+
+      toast: s.toast,
+      undo: () => { clearTimeout(this._t); if (s.prevRows) this.setState({ rows: s.prevRows, toast: null, prevRows: null }); },
+      hideToast: () => { clearTimeout(this._t); this.setState({ toast: null, prevRows: null }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
