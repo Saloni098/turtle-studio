@@ -159,12 +159,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 }
 
 /* play: pinned strip; vertical scrolling moves the cards sideways, then the page carries on */
-.play{position:relative;width:100vw;margin-left:calc(50% - 50vw)}
-.play-pin{position:sticky;top:80px;height:calc(100vh - 80px);display:flex;flex-direction:column;justify-content:center;gap:28px;overflow:hidden}
+.play{position:relative;width:100vw;margin-left:calc(50% - 50vw);--nav:80px;--ch:min(58vh,560px)}
+/* the pinned strip is only as tall as the cards, so the space around it matches the other sections; it pins centred below the nav */
+.play-pin{position:sticky;top:calc(var(--nav) + (100vh - var(--nav) - var(--ch)) / 2);height:var(--ch);overflow:hidden}
 .play-track{display:flex;gap:20px;width:max-content;padding-left:var(--play-pad,72px);padding-right:var(--play-pad,72px);will-change:transform}
-.play-card{flex:none;height:min(58vh,560px);margin:0;border-radius:14px;overflow:hidden;background:var(--block)}
+.play-card{flex:none;height:var(--ch);margin:0;border-radius:14px;overflow:hidden;background:var(--block)}
 .play-card img{display:block;height:100%;width:auto;max-width:none}
-@media (max-width:700px){.play-pin{top:68px;height:calc(100vh - 68px);gap:20px}.play-card{height:min(46vh,360px);border-radius:10px}.play-track{gap:12px}}
+@media (max-width:700px){.play{--nav:68px;--ch:min(46vh,360px)}.play-card{border-radius:10px}.play-track{gap:12px}}
 /* no pinning for people who prefer less motion: a plain swipeable row */
 @media (prefers-reduced-motion:reduce){.play{height:auto!important}.play-pin{position:static;height:auto}.play-track{transform:none!important;overflow-x:auto;width:auto;scroll-snap-type:x mandatory}.play-card{scroll-snap-align:start}}
 
